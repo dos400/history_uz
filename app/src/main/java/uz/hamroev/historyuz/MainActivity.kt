@@ -22,8 +22,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        /* Doston Hamroyev*/
-        /*Bismillahir rohmanir rohim Alloh o'zing madadkor bo'l */
+        /* Developer - Doston Hamroyev   iAndroid.uz */
 
         hideSystemBars()
         supportActionBar?.hide()
@@ -32,6 +31,8 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this@MainActivity, HomeActivity::class.java))
             }
         }, 1500)
+
+
 
 
     }
