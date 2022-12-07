@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed(object : Runnable {
             override fun run() {
                 startActivity(Intent(this@MainActivity, HomeActivity::class.java))
+                finish()
             }
         }, 1500)
 

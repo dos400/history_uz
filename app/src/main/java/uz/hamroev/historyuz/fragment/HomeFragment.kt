@@ -1,37 +1,36 @@
 package uz.hamroev.historyuz.fragment
 
+import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import uz.hamroev.historyuz.R
+import uz.hamroev.historyuz.activity.ThemeActivity
+import uz.hamroev.historyuz.adapters.NavAdapter
+import uz.hamroev.historyuz.adapters.ThemeAdapter
 import uz.hamroev.historyuz.databinding.FragmentHomeBinding
+import uz.hamroev.historyuz.models.Nav
+import uz.hamroev.historyuz.models.Theme
+import uz.hamroev.historyuz.utils.toast
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     lateinit var binding: FragmentHomeBinding
+    lateinit var listTheme: ArrayList<Theme>
+    lateinit var themeAdapter: ThemeAdapter
+
+    private var mediaPlayer: MediaPlayer? = null
+    private val TAG = "HomeFragment"
+    var isClick = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,28 +41,97 @@ class HomeFragment : Fragment() {
             binding.drawerLayout.open()
         }
 
+        loadThemeData()
+        loadNavData()
+        themeAdapter =
+            ThemeAdapter(requireContext(), listTheme, object : ThemeAdapter.OnThemeClickListener {
+                override fun onLongClick(theme: Theme, position: Int) {
+                    try {
+                        stopMediaPlayer()
+                        mediaPlayer = MediaPlayer.create(requireContext(), theme.musicId)
+                        mediaPlayer?.start()
+
+                        mediaPlayer?.setOnCompletionListener {
+                            if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+                                mediaPlayer?.release()
+                                mediaPlayer = null
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.d(TAG, "onPlay: ${e.message}")
+                    }
+                }
+
+                override fun onClick(theme: Theme, position: Int) {
+                    openWithTwoClick()
+                }
+
+
+            })
+        binding.rvTheme.adapter = themeAdapter
+
 
 
         return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    private fun loadNavData() {
+        val listNav = ArrayList<Nav>()
+        listNav.clear()
+        listNav.add(Nav("Asosiy", R.drawable.ic_home_bold, R.raw.one))
+        listNav.add(Nav("Ilova haqida", R.drawable.ic_info_bold, R.raw.one))
+        listNav.add(Nav("Mualliflar", R.drawable.ic_users, R.raw.one))
+        listNav.add(Nav("Yuborish", R.drawable.ic_share, R.raw.one))
+        listNav.add(Nav("Baholash", R.drawable.ic_star, R.raw.one))
+        listNav.add(Nav("Chiqish", R.drawable.ic_exit_bold, R.raw.one))
+        val navAdapter = NavAdapter(requireContext(), listNav, object : NavAdapter.OnNavClickListener{
+            override fun onLongClick(nav: Nav, position: Int) {
+
             }
+
+            override fun onClick(nav: Nav, position: Int) {
+
+            }
+
+        })
+        binding.rvNav.adapter = navAdapter
     }
+
+    private fun openWithTwoClick() {
+        if (isClick) {
+            startActivity(Intent(requireContext(), ThemeActivity::class.java))
+        }
+        isClick = true
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            isClick = false
+        }, 700)
+    }
+
+    private fun loadThemeData() {
+        listTheme = ArrayList()
+        listTheme.add(Theme(activity?.resources!!.getString(R.string.theme1), R.raw.one))
+        listTheme.add(Theme(activity?.resources!!.getString(R.string.theme2), R.raw.one))
+        listTheme.add(Theme(activity?.resources!!.getString(R.string.theme3), R.raw.one))
+        listTheme.add(Theme(activity?.resources!!.getString(R.string.theme4), R.raw.one))
+        listTheme.add(Theme(activity?.resources!!.getString(R.string.theme5), R.raw.one))
+        listTheme.add(Theme(activity?.resources!!.getString(R.string.theme6), R.raw.one))
+        listTheme.add(Theme(activity?.resources!!.getString(R.string.theme7), R.raw.one))
+        listTheme.add(Theme(activity?.resources!!.getString(R.string.theme8), R.raw.one))
+        listTheme.add(Theme(activity?.resources!!.getString(R.string.theme9), R.raw.one))
+        listTheme.add(Theme(activity?.resources!!.getString(R.string.theme10), R.raw.one))
+        listTheme.add(Theme(activity?.resources!!.getString(R.string.theme11), R.raw.one))
+        listTheme.add(Theme(activity?.resources!!.getString(R.string.theme12), R.raw.one))
+
+    }
+
+
+    private fun stopMediaPlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer?.stop()
+            mediaPlayer?.release()
+            mediaPlayer = null
+        }
+    }
+
 }

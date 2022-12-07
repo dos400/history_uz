@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:padding="2dp"
+    android:id="@+id/main"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="6">
+
+            <ImageView
+                android:id="@+id/nav_icon_image_view"
+                android:src="@drawable/ic_home"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/nav_name_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Asosiy"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"
+                android:paddingStart="2dp"
+                android:textStyle="normal"
+                android:textSize="14sp"
+                android:fontFamily="@font/main_roboto_regular"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
