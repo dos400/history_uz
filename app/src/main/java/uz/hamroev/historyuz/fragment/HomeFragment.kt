@@ -152,7 +152,8 @@ class HomeFragment : Fragment() {
                             4 -> {
 /*rate*/
                                 try {
-                                    val uri: Uri = Uri.parse("market://details?id=${activity?.packageName}")
+                                    val uri: Uri =
+                                        Uri.parse("market://details?id=${activity?.packageName}")
                                     val intent = Intent(Intent.ACTION_VIEW, uri)
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     startActivity(intent)
