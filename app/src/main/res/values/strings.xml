@@ -7,14 +7,15 @@
     <string name="theme1">1-mavzu. Kirish. “Oʻzbekistonning eng yangi tarixi” oʻquv fanining predmeti, maqsadi va vazifalari, nazariy-metodologik tamoyillari</string>
     <string name="theme2">2-mavzu. Mustaqillikka erishish arafasida Oʻzbekistondagi ijtimoiy-siyosiy jarayonlar</string>
     <string name="theme3">3-mavzu. Mustaqil Oʻzbekiston Respublikasining tashkil topishi va uning tarixiy ahamiyati</string>
-    <string name="theme4">4-mavzu. Oʻzbekistonning oʻz xos istiqlol va taraqqiyot yoʻli</string>
+    <string name="theme4">4-mavzu. Oʻzbekistonning oʻziga xos istiqlol va taraqqiyot yoʻli</string>
     <string name="theme5">5-mavzu. Oʻzbekistonda demokratik, fuqarolik jamiyati asoslarining shakllanishi, amalga oshirilgan siyosiy islohotlar. Oʻzbekistonda demokratik va fuqarolik jamiyatini rivojlantirish borasida amalga oshirilgan siyosiy islohotlar. </string>
     <string name="theme6">6-mavzu. Iqtisodiy islohotlar, xususiy mulkchilikning shakllanishi. Oʻzbekistonda bozor munosabatlarining rivojlanishi</string>
     <string name="theme7">7-mavzu. Oʻzbekiston Respublikasidagi ijtimoiy oʻzgarishlar</string>
-    <string name="theme8">8-mavzu. Mustaqillik yillarida Oʻzbekistondagi maʼnaviy va madaniy taraqqiyot. Oʻzbekiston Respublikasida taʼlim sohasida amalga oshirilgan islohotlar</string>
-    <string name="theme9">9-mavzu. Mustaqillik yillarida Qoraqalpogʻiston respublikasi</string>
-    <string name="theme10">10-mavzu. Oʻzbekiston va jahon hamjamiyati</string>
-    <string name="theme11">11–mavzu. Yangilanayotgan Oʻzbekiston: milliy tiklanishdan — milliy yuksalish sari. 2017–2021-yillarga moʻljallangan Oʻzbekiston respublikasini yanada rivojlantirish boʻyicha Harakatlar Strategiyasining ustuvor yoʻnalishlari</string>
-    <string name="theme12">12-mavzu. Oʻzbekiston Respublikasining xalqaro reyting va indekslardagi oʻrni hamda nufuzining ortib borishi</string>
+    <string name="theme8">8-mavzu. Mustaqillik yillarida Oʻzbekistondagi maʼnaviy va madaniy taraqqiyot. </string>
+    <string name="theme9">9-mavzu. Oʻzbekiston Respublikasida taʼlim sohasida amalga oshirilgan islohotlar</string>
+    <string name="theme10">10-mavzu. Mustaqillik yillarida Qoraqalpogʻiston respublikasi</string>
+    <string name="theme11">11-mavzu. Oʻzbekiston va jahon hamjamiyati</string>
+    <string name="theme12">12-mavzu. Oʻzbekiston respublikasini rivojlantirishda Harakatlar Strategiyasining tutgan oʻrni, </string>
+    <string name="theme13">13-mavzu. Oʻzbekiston Respublikasining xalqaro reyting va indekslardagi oʻrni hamda nufuzining ortib borishi</string>
 
 </resources>

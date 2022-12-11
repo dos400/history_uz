@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import uz.hamroev.historyuz.R
+import uz.hamroev.historyuz.databinding.FragmentAboutAppBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,12 +31,16 @@ class AboutAppFragment : Fragment() {
         }
     }
 
+    lateinit var binding: FragmentAboutAppBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_about_app, container, false)
+    ): View {
+        binding = FragmentAboutAppBinding.inflate(layoutInflater)
+
+
+
+        return binding.root
     }
 
     companion object {
