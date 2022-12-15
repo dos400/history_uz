@@ -42,17 +42,82 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/title_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/main_roboto_regular"
                     android:gravity="center_vertical"
-                    android:text="Mualliflar"
+                    android:text="4-Mavzu"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="normal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/back_button"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:id="@+id/play_button"
+                        android:layout_width="56dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/music_image"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/fi_pause" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/zoom_out_button"
+                        android:layout_width="56dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/fi_zoom_out" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/zoom_in_button"
+                        android:layout_width="56dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/fi_zoom_in" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/font_button"
+                        android:layout_width="56dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/fi_type" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -62,7 +127,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/white"
+            android:background="@color/grey_blue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

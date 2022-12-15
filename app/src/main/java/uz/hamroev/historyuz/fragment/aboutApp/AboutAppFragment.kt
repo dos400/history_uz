@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.flexbox.FlexDirection
@@ -19,39 +20,22 @@ import uz.hamroev.historyuz.activity.ThemeActivity
 import uz.hamroev.historyuz.databinding.FragmentAboutAppBinding
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [AboutAppFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AboutAppFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     lateinit var binding: FragmentAboutAppBinding
 
     private var mediaPlayer: MediaPlayer? = null
+    private var mediaPlayer2: MediaPlayer? = null
     var isClick = false
+    var isClick2 = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAboutAppBinding.inflate(layoutInflater)
+
 
         binding.backButton.setOnLongClickListener {
             try {
@@ -77,6 +61,7 @@ class AboutAppFragment : Fragment() {
                     mediaPlayer = null
                 }
                 findNavController().popBackStack()
+                stopMediaPlayer2()
             }
             isClick = true
             val handler = Handler(Looper.getMainLooper())
@@ -95,20 +80,37 @@ class AboutAppFragment : Fragment() {
         """.trimIndent()
 
         binding.ilovaHaqidaFullTv.setOnClickListener {
+            try {
+                stopMediaPlayer2()
+                mediaPlayer2 = MediaPlayer.create(requireContext(), R.raw.ilova_haqida_full)
+                mediaPlayer2?.start()
 
+                mediaPlayer2?.setOnCompletionListener {
+                    if (mediaPlayer2 != null && mediaPlayer2!!.isPlaying) {
+                        mediaPlayer2?.release()
+                        mediaPlayer2 = null
+                    }
+                }
+            } catch (e: Exception) {
+            }
         }
 
+        //On Back pressed Dispatcher
+        activity?.onBackPressedDispatcher?.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    stopMediaPlayer2()
+                    findNavController().popBackStack()
+                }
 
-//        val recyclerView = binding.rvMavzu
-//        val layoutManager = FlexboxLayoutManager(context)
-//        layoutManager.flexDirection = FlexDirection.ROW
-//        layoutManager.justifyContent = JustifyContent.FLEX_START
-//        recyclerView.layoutManager = layoutManager
+            })
+
 
 
         return binding.root
-    }
 
+    }
 
 
     private fun stopMediaPlayer() {
@@ -118,4 +120,14 @@ class AboutAppFragment : Fragment() {
             mediaPlayer = null
         }
     }
+
+    private fun stopMediaPlayer2() {
+        if (mediaPlayer2 != null) {
+            mediaPlayer2?.stop()
+            mediaPlayer2?.release()
+            mediaPlayer2 = null
+        }
+    }
+
+
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.Navigation
 import uz.hamroev.historyuz.R
+import uz.hamroev.historyuz.cache.Cache
 import uz.hamroev.historyuz.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity() {
@@ -14,6 +15,7 @@ class HomeActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        Cache.init(this)
 
 
     }

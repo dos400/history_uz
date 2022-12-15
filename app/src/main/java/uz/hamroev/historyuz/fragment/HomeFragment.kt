@@ -13,11 +13,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import uz.hamroev.historyuz.R
 import uz.hamroev.historyuz.activity.ThemeActivity
 import uz.hamroev.historyuz.adapters.NavAdapter
 import uz.hamroev.historyuz.adapters.ThemeAdapter
+import uz.hamroev.historyuz.cache.Cache
 import uz.hamroev.historyuz.databinding.FragmentHomeBinding
 import uz.hamroev.historyuz.models.Nav
 import uz.hamroev.historyuz.models.Theme
@@ -34,6 +36,8 @@ class HomeFragment : Fragment() {
     private val TAG = "HomeFragment"
     var isClick = false
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,6 +47,15 @@ class HomeFragment : Fragment() {
         binding.menuButton.setOnClickListener {
             binding.drawerLayout.open()
         }
+        activity?.onBackPressedDispatcher?.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    stopMediaPlayer()
+                    activity?.finish()
+                }
+
+            })
 
         loadThemeData()
         loadNavData()
@@ -66,7 +79,7 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onClick(theme: Theme, position: Int) {
-                    openWithTwoClick()
+                    openWithTwoClick(position+1)
                 }
 
 
@@ -118,15 +131,16 @@ class HomeFragment : Fragment() {
                                 binding.drawerLayout.closeDrawers()
                             }
                             1 -> {
-                                findNavController().navigate(R.id.aboutAppFragment)
                                 binding.drawerLayout.closeDrawers()
+                                findNavController().navigate(R.id.aboutAppFragment)
                             }
                             2 -> {
-                                findNavController().navigate(R.id.authorFragment)
                                 binding.drawerLayout.closeDrawers()
+                                findNavController().navigate(R.id.authorFragment)
                             }
                             3 -> {
 
+                                binding.drawerLayout.closeDrawers()
                                 /*share*/
                                 try {
                                     val intent = Intent(Intent.ACTION_SEND)
@@ -147,10 +161,10 @@ class HomeFragment : Fragment() {
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                 }
-                                binding.drawerLayout.closeDrawers()
                             }
                             4 -> {
-/*rate*/
+                                /*rate*/
+                                binding.drawerLayout.closeDrawers()
                                 try {
                                     val uri: Uri =
                                         Uri.parse("market://details?id=${activity?.packageName}")
@@ -164,7 +178,6 @@ class HomeFragment : Fragment() {
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     startActivity(intent)
                                 }
-                                binding.drawerLayout.closeDrawers()
                             }
                             5 -> {
                                 activity?.finish()
@@ -182,12 +195,13 @@ class HomeFragment : Fragment() {
         binding.rvNav.adapter = navAdapter
     }
 
-    private fun openWithTwoClick() {
+    private fun openWithTwoClick(position: Int) {
         if (isClick) {
             if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
                 mediaPlayer?.release()
                 mediaPlayer = null
             }
+            Cache.themePosition = position
             startActivity(Intent(requireContext(), ThemeActivity::class.java))
         }
         isClick = true
@@ -222,6 +236,11 @@ class HomeFragment : Fragment() {
             mediaPlayer?.release()
             mediaPlayer = null
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.drawerLayout.closeDrawers()
     }
 
 }
