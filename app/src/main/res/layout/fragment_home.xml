@@ -26,6 +26,7 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
+                    android:background="@drawable/ripple_to_image"
                     android:id="@+id/menu_button"
                     android:layout_width="56dp"
                     android:layout_height="match_parent"

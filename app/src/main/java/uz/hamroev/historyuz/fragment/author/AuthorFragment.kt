@@ -87,14 +87,11 @@ class AuthorFragment : Fragment() {
     private fun loadAuthors() {
         listAuthor = ArrayList()
         listAuthor.clear()
-        listAuthor.add(Author("Hulkar", "Loyiha rahbari", R.drawable.ic_hulkar_opa))
-        listAuthor.add(Author("Hulkar", "Loyiha rahbari", R.drawable.ic_hulkar_opa))
-        listAuthor.add(Author("Hulkar", "Loyiha rahbari", R.drawable.ic_hulkar_opa))
-        listAuthor.add(Author("Hulkar", "Loyiha rahbari", R.drawable.ic_hulkar_opa))
-        listAuthor.add(Author("Hulkar", "Loyiha rahbari", R.drawable.ic_hulkar_opa))
-        listAuthor.add(Author("Hulkar", "Loyiha rahbari", R.drawable.ic_hulkar_opa))
-        listAuthor.add(Author("Hulkar", "Loyiha rahbari", R.drawable.ic_hulkar_opa))
-        listAuthor.add(Author("Hulkar", "Loyiha rahbari", R.drawable.ic_hulkar_opa))
+        listAuthor.add(Author("Mirzaxmedova \nHulkar", "TDShU, kafedra mudiri", R.drawable.ic_hulkar_opa))
+        listAuthor.add(Author("Karimov \nNodir", "TDShU, oʼqituvchi", R.drawable.ic_nodir_karimov))
+        listAuthor.add(Author("Xomidov \nIsfandiyor", "Sevimli TV diktori", R.drawable.ic_isfandiyorxon))
+        listAuthor.add(Author("Meliqoʼziev \nIqboljon", "Oʼzbekiston davlat sanʼat va madaniyat instituti \n" + "Ovoz rejissyorligi va operatorlik mahorati kafedrasi mudiri", R.drawable.ic_users))
+        listAuthor.add(Author("Hamroyev \nDoston", "Dasturchi.", R.drawable.ic_doston))
     }
 
     private fun stopMediaPlayer() {

@@ -23,8 +23,10 @@ class ThemeActivity : AppCompatActivity() {
     lateinit var mavzuAdapter: MavzuAdapter
 
     private var mediaPlayer: MediaPlayer? = null
+    private var mMediaPlayer: MediaPlayer? = null
     private val TAG = "ThemeActivity"
     var isClick = false
+    var isPlay = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +65,7 @@ class ThemeActivity : AppCompatActivity() {
         //zoom out #### need kattalashtirish audio ###
         binding.zoomOutButton.setOnClickListener {
             if (openWithTwoClick()) {
-                mavzuAdapter.textSize -=1
+                mavzuAdapter.textSize -= 1
                 mavzuAdapter.notifyDataSetChanged()
             }
         }
@@ -88,7 +90,7 @@ class ThemeActivity : AppCompatActivity() {
         //zoom in  #### need kichiklashtirdh audio ####
         binding.zoomInButton.setOnClickListener {
             if (openWithTwoClick()) {
-                mavzuAdapter.textSize +=1
+                mavzuAdapter.textSize += 1
                 mavzuAdapter.notifyDataSetChanged()
             }
         }
@@ -133,7 +135,6 @@ class ThemeActivity : AppCompatActivity() {
             }
             return@setOnLongClickListener true
         }
-
         binding.fontButton.setOnClickListener {
 //            if (mediaPlayer == null) {
 //                mediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
@@ -154,22 +155,52 @@ class ThemeActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.d(TAG, "onCreate: ${e.message}")
             }
-            updateSeekBar()
+           // updateSeekBar()
 
         }
+
+        binding.playButton.setOnLongClickListener {
+            try {
+                stopMediaPlayer()
+                mediaPlayer = MediaPlayer.create(this, R.raw.orqaga)
+                mediaPlayer?.start()
+
+                mediaPlayer?.setOnCompletionListener {
+                    if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+                        mediaPlayer?.release()
+                        mediaPlayer = null
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "onCreate: ${e.message}")
+            }
+            return@setOnLongClickListener true
+        }
+        binding.playButton.setOnClickListener {
+            if (openWithTwoClick()) {
+                if (isPlay) {
+                    isPlay = false
+                    binding.musicImage.setImageResource(R.drawable.fi_play)
+                    pauseSound()
+                } else {
+                    isPlay = true
+                    playSound()
+                    binding.musicImage.setImageResource(R.drawable.fi_pause)
+                }
+            }
+        }
+
 
 
 
     }
 
     private fun loadTheme() {
+        val listTheme = TarixDatabase.GET.getTarixDatabase().getTarixDao().getThemeById(Cache.themePosition!!)
+        mavzuAdapter = MavzuAdapter(this, listTheme)
+        binding.rvMavzu.adapter = mavzuAdapter
         when (Cache.themePosition) {
-            1 -> {
-                val listTheme = TarixDatabase.GET.getTarixDatabase().getTarixDao().getThemeById(1)
-                mavzuAdapter = MavzuAdapter(this, listTheme)
-                binding.rvMavzu.adapter = mavzuAdapter
-
-            }
+            1 -> {}
             2 -> {}
             3 -> {}
             4 -> {}
@@ -182,6 +213,28 @@ class ThemeActivity : AppCompatActivity() {
             11 -> {}
             12 -> {}
             13 -> {}
+        }
+    }
+
+    private fun setData(curPos: Int) {
+        var currentTime = curPos / 1000
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val listTheme = TarixDatabase.GET.getTarixDatabase().getTarixDao().getThemeById(Cache.themePosition!!)
+            for (tarixEntity in listTheme) {
+                lifecycleScope.launch(Dispatchers.Main) {
+                    if (currentTime == tarixEntity.time) {
+                        mavzuAdapter.currentPosition = tarixEntity.id - 1
+                        mavzuAdapter.color = resources.getColor(R.color.orange_blaze)
+
+                        binding.rvMavzu.scrollToPosition(tarixEntity.id - 1)
+                        mavzuAdapter.notifyItemChanged(tarixEntity.id - 1)
+                        mavzuAdapter.notifyItemChanged(tarixEntity.id - 2)
+
+                    }
+                }
+
+            }
         }
     }
 
@@ -208,15 +261,19 @@ class ThemeActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateSeekBar() {
+    /*
+
+    For music
+
+    * */
+
+    fun updateTime(){
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed(object : Runnable {
             override fun run() {
                 try {
-                    val curPos = mediaPlayer?.currentPosition!!
-                    Log.d(TAG, "run: ${curPos}")
-                    Log.d(TAG, "run: ${curPos / 1000}")
-                    setDataText(curPos)
+                    val curPos = mMediaPlayer?.currentPosition!!
+                    setData(curPos)
                     handler.postDelayed(this, 1000)
                 } catch (e: Exception) {
 
@@ -225,30 +282,65 @@ class ThemeActivity : AppCompatActivity() {
         }, 1000)
     }
 
-    private fun setDataText(curPos: Int) {
-        var currentTime = curPos / 1000
-
-        lifecycleScope.launch(Dispatchers.Main) {
-            val listTheme = TarixDatabase.GET.getTarixDatabase().getTarixDao().getThemeById(1)
-
-            for (tarixEntity in listTheme) {
-                if (currentTime == tarixEntity.time){
-                    toast("${tarixEntity.time}")
-                    mavzuAdapter.currentPosition = tarixEntity.id
-                    Log.d(TAG, "setDataText: word id = ${tarixEntity.word}")
-                    mavzuAdapter.color = resources.getColor(R.color.orange)
-                    mavzuAdapter.notifyDataSetChanged()
-                    mavzuAdapter = MavzuAdapter(this@ThemeActivity, listTheme)
-                    binding.rvMavzu.adapter = mavzuAdapter
-
-                }
-            }
+    fun stopSound() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer!!.stop()
+            mMediaPlayer!!.release()
+            mMediaPlayer = null
         }
-
-
-
-
     }
 
+    fun pauseSound() {
+        if (mMediaPlayer?.isPlaying == true) mMediaPlayer?.pause()
+    }
+
+    fun playSound() {
+        if (mMediaPlayer == null) {
+            when (Cache.themePosition) {
+                1 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+                2 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+                3 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+                4 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+                5 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+                6 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+                7 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+                8 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+                9 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+                10 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+                11 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+                12 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+                13 -> {
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                }
+            }
+            updateTime()
+            mMediaPlayer!!.start()
+
+        } else mMediaPlayer!!.start()
+    }
 
 }

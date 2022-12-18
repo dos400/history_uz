@@ -24,6 +24,7 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
+                    android:background="@drawable/ripple_to_image"
                     android:id="@+id/back_button"
                     android:layout_width="56dp"
                     android:layout_height="match_parent"
@@ -64,6 +65,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
+                        android:background="@drawable/ripple_to_image"
                         android:id="@+id/play_button"
                         android:layout_width="56dp"
                         android:layout_height="match_parent"
@@ -73,11 +75,12 @@
                             android:id="@+id/music_image"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/fi_pause" />
+                            android:src="@drawable/fi_play" />
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:background="@drawable/ripple_to_image"
                         android:id="@+id/zoom_out_button"
                         android:layout_width="56dp"
                         android:layout_height="match_parent"
@@ -91,6 +94,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:background="@drawable/ripple_to_image"
                         android:id="@+id/zoom_in_button"
                         android:layout_width="56dp"
                         android:layout_height="match_parent"
@@ -104,6 +108,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:background="@drawable/ripple_to_image"
                         android:id="@+id/font_button"
                         android:layout_width="56dp"
                         android:layout_height="match_parent"
