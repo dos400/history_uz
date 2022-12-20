@@ -22,7 +22,7 @@ class MavzuAdapter(var context: Context, var list: List<TarixEntity>) : Recycler
     var font = 0
     var style = 0
     //color
-    var color = context.resources.getColor(R.color.orange_blaze)
+    var color = context.resources.getColor(R.color.black)
     var black = context.resources.getColor(R.color.black)
     var currentPosition = 0
     private  val TAG = "MavzuAdapter"
@@ -48,6 +48,7 @@ class MavzuAdapter(var context: Context, var list: List<TarixEntity>) : Recycler
                 itemMavzuBinding.wordTv.textSize = textSize+5.0f
 
             } else {
+                itemMavzuBinding.wordTv.setTypeface(null, Typeface.NORMAL)
                 itemMavzuBinding.wordTv.setTextColor(black)
             }
 
@@ -69,11 +70,6 @@ class MavzuAdapter(var context: Context, var list: List<TarixEntity>) : Recycler
     override fun getItemCount(): Int = list.size
 
 
-    interface OnStateListener {
-        fun onZoomIn()
-        fun onZoomOut()
-        fun onChangeFont()
-        fun onChangeColor()
-    }
+
 
 }

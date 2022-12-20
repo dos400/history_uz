@@ -29,5 +29,13 @@ object Cache {
             }
         }
 
+    var isBlindActive: Boolean?
+        get() = sharedPreferences.getBoolean("isblindactive", false)
+        set(value) = sharedPreferences.edit() {
+            if (value != null) {
+                it.putBoolean("isblindactive", value)
+            }
+        }
+
 
 }

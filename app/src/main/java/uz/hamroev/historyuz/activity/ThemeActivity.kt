@@ -1,5 +1,6 @@
 package uz.hamroev.historyuz.activity
 
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
@@ -35,8 +36,10 @@ class ThemeActivity : AppCompatActivity() {
         setContentView(binding.root)
         Cache.init(this)
 
+        toast("${Cache.isBlindActive}")
+
         binding.titleTv.text = "${Cache.themePosition}-Mavzu"
-        loadTheme()
+        loadTheme(this)
 
         //back
         binding.backButton.setOnClickListener {
@@ -65,8 +68,10 @@ class ThemeActivity : AppCompatActivity() {
         //zoom out #### need kattalashtirish audio ###
         binding.zoomOutButton.setOnClickListener {
             if (openWithTwoClick()) {
-                mavzuAdapter.textSize -= 1
-                mavzuAdapter.notifyDataSetChanged()
+                lifecycleScope.launch(Dispatchers.Main) {
+                    mavzuAdapter.textSize -= 1
+                    mavzuAdapter.notifyDataSetChanged()
+                }
             }
         }
         binding.zoomOutButton.setOnLongClickListener {
@@ -90,8 +95,10 @@ class ThemeActivity : AppCompatActivity() {
         //zoom in  #### need kichiklashtirdh audio ####
         binding.zoomInButton.setOnClickListener {
             if (openWithTwoClick()) {
-                mavzuAdapter.textSize += 1
-                mavzuAdapter.notifyDataSetChanged()
+                lifecycleScope.launch(Dispatchers.Main) {
+                    mavzuAdapter.textSize += 1
+                    mavzuAdapter.notifyDataSetChanged()
+                }
             }
         }
         binding.zoomInButton.setOnLongClickListener {
@@ -155,7 +162,7 @@ class ThemeActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.d(TAG, "onCreate: ${e.message}")
             }
-           // updateSeekBar()
+            // updateSeekBar()
 
         }
 
@@ -191,47 +198,36 @@ class ThemeActivity : AppCompatActivity() {
         }
 
 
-
-
     }
 
-    private fun loadTheme() {
-        val listTheme = TarixDatabase.GET.getTarixDatabase().getTarixDao().getThemeById(Cache.themePosition!!)
-        mavzuAdapter = MavzuAdapter(this, listTheme)
-        binding.rvMavzu.adapter = mavzuAdapter
-        when (Cache.themePosition) {
-            1 -> {}
-            2 -> {}
-            3 -> {}
-            4 -> {}
-            5 -> {}
-            6 -> {}
-            7 -> {}
-            8 -> {}
-            9 -> {}
-            10 -> {}
-            11 -> {}
-            12 -> {}
-            13 -> {}
+    private fun loadTheme(context: Context) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val listTheme = TarixDatabase.GET.getTarixDatabase().getTarixDao()
+                .getThemeById(Cache.themePosition!!)
+
+            mavzuAdapter = MavzuAdapter(context, listTheme)
+            binding.rvMavzu.adapter = mavzuAdapter
+
         }
+
+
     }
 
     private fun setData(curPos: Int) {
         var currentTime = curPos / 1000
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            val listTheme = TarixDatabase.GET.getTarixDatabase().getTarixDao().getThemeById(Cache.themePosition!!)
+        lifecycleScope.launch(Dispatchers.Main) {
+            val listTheme = TarixDatabase.GET.getTarixDatabase().getTarixDao()
+                .getThemeById(Cache.themePosition!!)
             for (tarixEntity in listTheme) {
-                lifecycleScope.launch(Dispatchers.Main) {
-                    if (currentTime == tarixEntity.time) {
-                        mavzuAdapter.currentPosition = tarixEntity.id - 1
-                        mavzuAdapter.color = resources.getColor(R.color.orange_blaze)
+                if (currentTime == tarixEntity.time) {
+                    mavzuAdapter.currentPosition = tarixEntity.id - 1
+                    mavzuAdapter.color = resources.getColor(R.color.orange_blaze)
 
-                        binding.rvMavzu.scrollToPosition(tarixEntity.id - 1)
-                        mavzuAdapter.notifyItemChanged(tarixEntity.id - 1)
-                        mavzuAdapter.notifyItemChanged(tarixEntity.id - 2)
+                    binding.rvMavzu.scrollToPosition(tarixEntity.id - 1)
+                    mavzuAdapter.notifyItemChanged(tarixEntity.id - 1)
+                    mavzuAdapter.notifyItemChanged(tarixEntity.id - 2)
 
-                    }
                 }
 
             }
@@ -267,7 +263,7 @@ class ThemeActivity : AppCompatActivity() {
 
     * */
 
-    fun updateTime(){
+    fun updateTime() {
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed(object : Runnable {
             override fun run() {
@@ -301,40 +297,40 @@ class ThemeActivity : AppCompatActivity() {
                     mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
                 }
                 2 -> {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu2)
                 }
                 3 -> {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu3)
                 }
                 4 -> {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu4)
                 }
                 5 -> {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu5)
                 }
                 6 -> {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu6)
                 }
                 7 -> {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu7)
                 }
                 8 -> {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu8)
                 }
                 9 -> {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu9)
                 }
                 10 -> {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu10)
                 }
                 11 -> {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu11)
                 }
                 12 -> {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu12)
                 }
                 13 -> {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.mavzu13)
                 }
             }
             updateTime()
@@ -342,5 +338,15 @@ class ThemeActivity : AppCompatActivity() {
 
         } else mMediaPlayer!!.start()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopSound()
+        stopMediaPlayer()
+    }
+
+
+
+
 
 }
