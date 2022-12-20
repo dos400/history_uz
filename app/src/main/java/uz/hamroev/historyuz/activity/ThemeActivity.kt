@@ -279,7 +279,7 @@ class ThemeActivity : AppCompatActivity() {
 
                 }
             }
-        }, 1000)
+        }, 2000)
     }
 
     fun stopSound() {
