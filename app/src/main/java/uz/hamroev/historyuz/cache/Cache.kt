@@ -38,4 +38,23 @@ object Cache {
         }
 
 
+    var textSize: Float?
+        get() = sharedPreferences.getFloat("textsize", 12.0f)
+        set(value) = sharedPreferences.edit() {
+            if (value != null) {
+                it.putFloat("textsize", value)
+            }
+        }
+
+    var textFont: Int?
+        get() = sharedPreferences.getInt("textfont", 0)
+        set(value) = sharedPreferences.edit() {
+            if (value != null) {
+                it.putInt("textfont", value)
+            }
+        }
+
+
+
+
 }

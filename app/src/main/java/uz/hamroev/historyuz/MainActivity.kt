@@ -33,6 +33,10 @@ class MainActivity : AppCompatActivity() {
 
         Cache.isBlindActive = this.isScreenReaderOn()
 
+        if (Cache.textFont == 0) {
+            Cache.textFont = R.font.main_roboto_regular
+        }
+
         hideSystemBars()
         supportActionBar?.hide()
         startAnimation()

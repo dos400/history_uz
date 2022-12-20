@@ -2,21 +2,27 @@ package uz.hamroev.historyuz.activity
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import uz.hamroev.historyuz.R
+import uz.hamroev.historyuz.adapters.FontAdapter
 import uz.hamroev.historyuz.adapters.mavzu.MavzuAdapter
 import uz.hamroev.historyuz.cache.Cache
 import uz.hamroev.historyuz.database.TarixDatabase
 import uz.hamroev.historyuz.databinding.ActivityThemeBinding
+import uz.hamroev.historyuz.databinding.DialogFontBinding
+import uz.hamroev.historyuz.models.Font
 import uz.hamroev.historyuz.utils.toast
 
 class ThemeActivity : AppCompatActivity() {
@@ -36,7 +42,6 @@ class ThemeActivity : AppCompatActivity() {
         setContentView(binding.root)
         Cache.init(this)
 
-        toast("${Cache.isBlindActive}")
 
         binding.titleTv.text = "${Cache.themePosition}-Mavzu"
         loadTheme(this)
@@ -69,7 +74,7 @@ class ThemeActivity : AppCompatActivity() {
         binding.zoomOutButton.setOnClickListener {
             if (openWithTwoClick()) {
                 lifecycleScope.launch(Dispatchers.Main) {
-                    mavzuAdapter.textSize -= 1
+                    mavzuAdapter.textSize = Cache.textSize!! - 1.0f
                     mavzuAdapter.notifyDataSetChanged()
                 }
             }
@@ -96,7 +101,7 @@ class ThemeActivity : AppCompatActivity() {
         binding.zoomInButton.setOnClickListener {
             if (openWithTwoClick()) {
                 lifecycleScope.launch(Dispatchers.Main) {
-                    mavzuAdapter.textSize += 1
+                    mavzuAdapter.textSize = Cache.textSize!! + 1.0f
                     mavzuAdapter.notifyDataSetChanged()
                 }
             }
@@ -143,27 +148,69 @@ class ThemeActivity : AppCompatActivity() {
             return@setOnLongClickListener true
         }
         binding.fontButton.setOnClickListener {
-//            if (mediaPlayer == null) {
-//                mediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
-//            }
-//            mediaPlayer?.start()
+            if (openWithTwoClick()) {
+                val listFont = ArrayList<Font>()
+                listFont.clear()
+                listFont.add(Font("Roboto Regular", R.font.main_roboto_regular))
+                listFont.add(Font("Roboto Mono", R.font.roboto_mono))
+                listFont.add(Font("Playball", R.font.playball))
+                listFont.add(Font("Leixo", R.font.leixo))
+                listFont.add(Font("Caveat", R.font.caveat))
+                listFont.add(Font("Comfortaa", R.font.comforta))
+                listFont.add(Font("Roboto Slab", R.font.roboto_slab))
+                listFont.add(Font("Sofia", R.font.sofia))
 
-            try {
-                stopMediaPlayer()
-                mediaPlayer = MediaPlayer.create(this, R.raw.mavzu1)
-                mediaPlayer?.start()
+                val alertDialog = android.app.AlertDialog.Builder(binding.root.context)
+                val dialog = alertDialog.create()
+                val bindingFont =
+                    DialogFontBinding.inflate(LayoutInflater.from(this))
+                dialog.setView(bindingFont.root)
+                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                dialog.setCancelable(true)
 
-                mediaPlayer?.setOnCompletionListener {
-                    if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
-                        mediaPlayer?.release()
-                        mediaPlayer = null
+                bindingFont.backButtonDialog.setOnLongClickListener {
+                    try {
+                        stopMediaPlayer()
+                        mediaPlayer = MediaPlayer.create(this, R.raw.orqaga)
+                        mediaPlayer?.start()
+
+                        mediaPlayer?.setOnCompletionListener {
+                            if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+                                mediaPlayer?.release()
+                                mediaPlayer = null
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.d(TAG, "onCreate: ${e.message}")
+                    }
+                    return@setOnLongClickListener true
+                }
+
+                bindingFont.backButtonDialog.setOnClickListener {
+                    if (Cache.isBlindActive!!) {
+                        dialog.dismiss()
+                    } else {
+                        if (openWithTwoClick()) {
+                            dialog.dismiss()
+                        }
                     }
                 }
-            } catch (e: Exception) {
-                Log.d(TAG, "onCreate: ${e.message}")
-            }
-            // updateSeekBar()
 
+                val fontAdapter =
+                    FontAdapter(this, listFont, object : FontAdapter.OnFontClickListener {
+                        override fun onClick(font: Font, position: Int) {
+                            Cache.textFont = font.fontResource
+                            mavzuAdapter.font = Cache.textFont
+                            mavzuAdapter.notifyDataSetChanged()
+                            dialog.dismiss()
+                        }
+                    })
+                bindingFont.rvFont.adapter = fontAdapter
+
+                dialog.show()
+
+
+            }
         }
 
         binding.playButton.setOnLongClickListener {
@@ -347,6 +394,13 @@ class ThemeActivity : AppCompatActivity() {
 
 
 
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop: ")
+        pauseSound()
+        binding.musicImage.setImageResource(R.drawable.fi_play)
+        stopMediaPlayer()
+    }
 
 
 }
