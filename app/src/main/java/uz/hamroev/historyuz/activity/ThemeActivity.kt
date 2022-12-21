@@ -317,7 +317,7 @@ class ThemeActivity : AppCompatActivity() {
 
     fun updateTime() {
         lifecycleScope.launch(Dispatchers.IO) {
-            while (true){
+            while (true) {
                 delay(1000)
                 val curPos = mMediaPlayer?.currentPosition!!
                 setData(curPos)
@@ -343,10 +343,14 @@ class ThemeActivity : AppCompatActivity() {
             mMediaPlayer!!.release()
             mMediaPlayer = null
         }
+        isPlay = false
     }
 
     fun pauseSound() {
-        if (mMediaPlayer?.isPlaying == true) mMediaPlayer?.pause()
+        if (mMediaPlayer?.isPlaying == true) {
+            isPlay = false
+            mMediaPlayer?.pause()
+        }
     }
 
     fun playSound() {
@@ -395,7 +399,9 @@ class ThemeActivity : AppCompatActivity() {
             updateTime()
             mMediaPlayer!!.start()
 
-        } else mMediaPlayer!!.start()
+        } else
+            mMediaPlayer!!.start()
+        isPlay = true
     }
 
     override fun onDestroy() {
@@ -403,7 +409,6 @@ class ThemeActivity : AppCompatActivity() {
         stopSound()
         stopMediaPlayer()
     }
-
 
     override fun onStop() {
         super.onStop()
