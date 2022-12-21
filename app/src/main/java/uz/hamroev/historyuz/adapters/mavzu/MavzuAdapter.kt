@@ -14,14 +14,15 @@ import uz.hamroev.historyuz.R
 import uz.hamroev.historyuz.cache.Cache
 import uz.hamroev.historyuz.database.TarixEntity
 import uz.hamroev.historyuz.databinding.ItemMavzuBinding
+import uz.hamroev.historyuz.utils.font
 
 class MavzuAdapter(var context: Context, var list: List<TarixEntity>) :
     RecyclerView.Adapter<MavzuAdapter.VhMavzu>() {
 
 
-    var textSize = Cache.textSize
+    var textSize = 12.0f
+    var font = R.font.main_roboto_regular
 
-    var font = Cache.textFont
     var color = context.resources.getColor(R.color.black)
     var black = context.resources.getColor(R.color.black)
     var currentPosition = 0
@@ -35,22 +36,22 @@ class MavzuAdapter(var context: Context, var list: List<TarixEntity>) :
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 itemMavzuBinding.wordTv.justificationMode = JUSTIFICATION_MODE_INTER_WORD
-                itemMavzuBinding.wordTv.setTypeface(context.resources.getFont(font!!))
             }
 
             if (currentPosition == position) {
                 itemMavzuBinding.wordTv.setTextColor(color)
-                itemMavzuBinding.wordTv.setTypeface(null, Typeface.BOLD)
-                itemMavzuBinding.wordTv.textSize = textSize!! + 5.0f
+                itemMavzuBinding.wordTv.setTypeface(context.font(font), Typeface.BOLD)
+                itemMavzuBinding.wordTv.textSize = textSize!! + 3.0f
 
             } else {
-                itemMavzuBinding.wordTv.setTypeface(null, Typeface.NORMAL)
+                itemMavzuBinding.wordTv.setTypeface(context.font(font), Typeface.NORMAL)
                 itemMavzuBinding.wordTv.setTextColor(black)
+                itemMavzuBinding.wordTv.textSize = textSize!!
             }
 
 
+
             itemMavzuBinding.wordTv.text = tarixEntity.word
-            itemMavzuBinding.wordTv.textSize = textSize!!
 
         }
 

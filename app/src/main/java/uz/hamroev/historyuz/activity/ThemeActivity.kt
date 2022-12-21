@@ -14,12 +14,14 @@ import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import uz.hamroev.historyuz.R
 import uz.hamroev.historyuz.adapters.FontAdapter
 import uz.hamroev.historyuz.adapters.mavzu.MavzuAdapter
 import uz.hamroev.historyuz.cache.Cache
 import uz.hamroev.historyuz.database.TarixDatabase
+import uz.hamroev.historyuz.database.TarixEntity
 import uz.hamroev.historyuz.databinding.ActivityThemeBinding
 import uz.hamroev.historyuz.databinding.DialogFontBinding
 import uz.hamroev.historyuz.models.Font
@@ -34,6 +36,8 @@ class ThemeActivity : AppCompatActivity() {
     private val TAG = "ThemeActivity"
     var isClick = false
     var isPlay = false
+    lateinit var listTheme: List<TarixEntity>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +49,7 @@ class ThemeActivity : AppCompatActivity() {
 
         binding.titleTv.text = "${Cache.themePosition}-Mavzu"
         loadTheme(this)
+
 
         //back
         binding.backButton.setOnClickListener {
@@ -74,7 +79,8 @@ class ThemeActivity : AppCompatActivity() {
         binding.zoomOutButton.setOnClickListener {
             if (openWithTwoClick()) {
                 lifecycleScope.launch(Dispatchers.Main) {
-                    mavzuAdapter.textSize = Cache.textSize!! - 1.0f
+                    mavzuAdapter.textSize -= 1.0f
+                    Cache.textSize = mavzuAdapter.textSize
                     mavzuAdapter.notifyDataSetChanged()
                 }
             }
@@ -101,7 +107,8 @@ class ThemeActivity : AppCompatActivity() {
         binding.zoomInButton.setOnClickListener {
             if (openWithTwoClick()) {
                 lifecycleScope.launch(Dispatchers.Main) {
-                    mavzuAdapter.textSize = Cache.textSize!! + 1.0f
+                    mavzuAdapter.textSize += 1.0f
+                    Cache.textSize = mavzuAdapter.textSize
                     mavzuAdapter.notifyDataSetChanged()
                 }
             }
@@ -124,12 +131,7 @@ class ThemeActivity : AppCompatActivity() {
             return@setOnLongClickListener true
         }
 
-        //font   need shrift audio ####
-//        binding.fontButton.setOnClickListener {
-//            if (openWithTwoClick()) {
-//
-//            }
-//        }
+
         binding.fontButton.setOnLongClickListener {
             try {
                 stopMediaPlayer()
@@ -200,7 +202,9 @@ class ThemeActivity : AppCompatActivity() {
                     FontAdapter(this, listFont, object : FontAdapter.OnFontClickListener {
                         override fun onClick(font: Font, position: Int) {
                             Cache.textFont = font.fontResource
-                            mavzuAdapter.font = Cache.textFont
+                            Log.d(TAG, "onBind: Fontga ${font.fontText} - ${font.fontResource}")
+                            mavzuAdapter.font = Cache.textFont!!
+                            mavzuAdapter.list = listTheme
                             mavzuAdapter.notifyDataSetChanged()
                             dialog.dismiss()
                         }
@@ -249,10 +253,12 @@ class ThemeActivity : AppCompatActivity() {
 
     private fun loadTheme(context: Context) {
         lifecycleScope.launch(Dispatchers.Main) {
-            val listTheme = TarixDatabase.GET.getTarixDatabase().getTarixDao()
+            listTheme = TarixDatabase.GET.getTarixDatabase().getTarixDao()
                 .getThemeById(Cache.themePosition!!)
 
             mavzuAdapter = MavzuAdapter(context, listTheme)
+            mavzuAdapter.textSize = Cache.textSize!!
+            mavzuAdapter.font = Cache.textFont!!
             binding.rvMavzu.adapter = mavzuAdapter
 
         }
@@ -264,16 +270,16 @@ class ThemeActivity : AppCompatActivity() {
         var currentTime = curPos / 1000
 
         lifecycleScope.launch(Dispatchers.Main) {
-            val listTheme = TarixDatabase.GET.getTarixDatabase().getTarixDao()
-                .getThemeById(Cache.themePosition!!)
-            for (tarixEntity in listTheme) {
-                if (currentTime == tarixEntity.time) {
-                    mavzuAdapter.currentPosition = tarixEntity.id - 1
+            for (i in listTheme.indices) {
+
+                if (currentTime == listTheme[i].time) {
+
+                    mavzuAdapter.currentPosition = i
                     mavzuAdapter.color = resources.getColor(R.color.orange_blaze)
 
-                    binding.rvMavzu.scrollToPosition(tarixEntity.id - 1)
-                    mavzuAdapter.notifyItemChanged(tarixEntity.id - 1)
-                    mavzuAdapter.notifyItemChanged(tarixEntity.id - 2)
+                    binding.rvMavzu.scrollToPosition(i)
+                    mavzuAdapter.notifyItemChanged(i)
+                    mavzuAdapter.notifyItemChanged(i - 1)
 
                 }
 
@@ -288,11 +294,10 @@ class ThemeActivity : AppCompatActivity() {
             click = true
         }
         isClick = true
-        val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed({
+        lifecycleScope.launch {
+            delay(1000)
             isClick = false
-        }, 700)
-
+        }
         return click
     }
 
@@ -311,18 +316,25 @@ class ThemeActivity : AppCompatActivity() {
     * */
 
     fun updateTime() {
-        val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed(object : Runnable {
-            override fun run() {
-                try {
-                    val curPos = mMediaPlayer?.currentPosition!!
-                    setData(curPos)
-                    handler.postDelayed(this, 1000)
-                } catch (e: Exception) {
-
-                }
+        lifecycleScope.launch(Dispatchers.IO) {
+            while (true){
+                delay(1000)
+                val curPos = mMediaPlayer?.currentPosition!!
+                setData(curPos)
             }
-        }, 2000)
+        }
+//        val handler = Handler(Looper.getMainLooper())
+//        handler.postDelayed(object : Runnable {
+//            override fun run() {
+//                try {
+//
+//                    handler.postDelayed(this, 1000)
+//                } catch (e: Exception) {
+//
+//                }
+//            }
+//        }, 1000)
+
     }
 
     fun stopSound() {
@@ -391,7 +403,6 @@ class ThemeActivity : AppCompatActivity() {
         stopSound()
         stopMediaPlayer()
     }
-
 
 
     override fun onStop() {

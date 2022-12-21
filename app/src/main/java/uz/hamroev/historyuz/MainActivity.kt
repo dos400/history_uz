@@ -16,6 +16,9 @@ import android.view.WindowInsetsController
 import android.view.accessibility.AccessibilityManager
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import uz.hamroev.historyuz.activity.HomeActivity
 import uz.hamroev.historyuz.cache.Cache
 import uz.hamroev.historyuz.databinding.ActivityMainBinding
@@ -40,12 +43,13 @@ class MainActivity : AppCompatActivity() {
         hideSystemBars()
         supportActionBar?.hide()
         startAnimation()
-        Handler(Looper.getMainLooper()).postDelayed(object : Runnable {
-            override fun run() {
-                startActivity(Intent(this@MainActivity, HomeActivity::class.java))
-                finish()
-            }
-        }, 1500)
+
+        lifecycleScope.launch {
+            delay(2000)
+            startActivity(Intent(this@MainActivity, HomeActivity::class.java))
+            finish()
+        }
+
 
 
     }
