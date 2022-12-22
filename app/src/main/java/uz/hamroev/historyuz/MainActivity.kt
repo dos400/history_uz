@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         startAnimation()
 
         lifecycleScope.launch {
-            delay(2000)
+            delay(2700)
             startActivity(Intent(this@MainActivity, HomeActivity::class.java))
             finish()
         }
@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.titleAppName.animateText("History Uz")
-        binding.titleAppName.setCharacterDeley(20)
+        binding.titleAppName.setCharacterDeley(100)
 
 
         binding.teamTv.startAnimation(animTeam)
