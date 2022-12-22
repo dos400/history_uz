@@ -17,6 +17,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import uz.hamroev.historyuz.R
 import uz.hamroev.historyuz.activity.ThemeActivity
+import uz.hamroev.historyuz.cache.Cache
 import uz.hamroev.historyuz.databinding.FragmentAboutAppBinding
 
 
@@ -55,19 +56,29 @@ class AboutAppFragment : Fragment() {
         }
 
         binding.backButton.setOnClickListener {
-            if (isClick) {
+            if (Cache.isBlindActive!!) {
                 if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
                     mediaPlayer?.release()
                     mediaPlayer = null
                 }
                 findNavController().popBackStack()
                 stopMediaPlayer2()
+            } else {
+                if (isClick) {
+                    if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+                        mediaPlayer?.release()
+                        mediaPlayer = null
+                    }
+                    findNavController().popBackStack()
+                    stopMediaPlayer2()
+                }
+                isClick = true
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({
+                    isClick = false
+                }, 700)
             }
-            isClick = true
-            val handler = Handler(Looper.getMainLooper())
-            handler.postDelayed({
-                isClick = false
-            }, 700)
+
         }
 
         binding.ilovaHaqidaFullTv.text = """
@@ -109,6 +120,19 @@ class AboutAppFragment : Fragment() {
 
 
         return binding.root
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopMediaPlayer()
+        stopMediaPlayer2()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopMediaPlayer()
+        stopMediaPlayer2()
 
     }
 

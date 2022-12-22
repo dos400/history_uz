@@ -16,7 +16,11 @@ import uz.hamroev.historyuz.database.TarixEntity
 import uz.hamroev.historyuz.databinding.ItemMavzuBinding
 import uz.hamroev.historyuz.utils.font
 
-class MavzuAdapter(var context: Context, var list: List<TarixEntity>) :
+class MavzuAdapter(
+    var context: Context,
+    var list: List<TarixEntity>,
+    var onTextClickListener: OnTextClickListener
+) :
     RecyclerView.Adapter<MavzuAdapter.VhMavzu>() {
 
 
@@ -50,6 +54,9 @@ class MavzuAdapter(var context: Context, var list: List<TarixEntity>) :
             }
 
 
+            itemMavzuBinding.wordTv.setOnClickListener {
+                onTextClickListener.onClick()
+            }
 
             itemMavzuBinding.wordTv.text = tarixEntity.word
 
@@ -67,5 +74,8 @@ class MavzuAdapter(var context: Context, var list: List<TarixEntity>) :
 
     override fun getItemCount(): Int = list.size
 
+    interface OnTextClickListener {
+        fun onClick()
+    }
 
 }

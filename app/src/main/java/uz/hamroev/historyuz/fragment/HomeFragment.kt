@@ -1,12 +1,11 @@
 package uz.hamroev.historyuz.fragment
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -37,7 +36,6 @@ class HomeFragment : Fragment() {
     var isClick = false
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,6 +43,7 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
 
         binding.menuButton.setOnClickListener {
+            vibratePhone()
             binding.drawerLayout.open()
         }
         activity?.onBackPressedDispatcher?.addCallback(
@@ -63,6 +62,7 @@ class HomeFragment : Fragment() {
             ThemeAdapter(requireContext(), listTheme, object : ThemeAdapter.OnThemeClickListener {
                 override fun onLongClick(theme: Theme, position: Int) {
                     try {
+                        vibratePhone()
                         stopMediaPlayer()
                         mediaPlayer = MediaPlayer.create(requireContext(), theme.musicId)
                         mediaPlayer?.start()
@@ -79,7 +79,13 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onClick(theme: Theme, position: Int) {
-                    openWithTwoClick(position+1)
+                    if (Cache.isBlindActive!!){
+                        vibratePhone()
+                        Cache.themePosition = position
+                        startActivity(Intent(requireContext(), ThemeActivity::class.java))
+                    } else {
+                        openWithTwoClick(position + 1)
+                    }
                 }
 
 
@@ -120,26 +126,30 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onClick(nav: Nav, position: Int) {
-                    if (isClick) {
+
+                    if (Cache.isBlindActive!!){
                         if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
                             mediaPlayer?.release()
                             mediaPlayer = null
                         }
-                        // any code here
                         when (position) {
                             0 -> {
+                                vibratePhone()
                                 binding.drawerLayout.closeDrawers()
                             }
                             1 -> {
+                                vibratePhone()
                                 binding.drawerLayout.closeDrawers()
                                 findNavController().navigate(R.id.aboutAppFragment)
                             }
                             2 -> {
+                                vibratePhone()
                                 binding.drawerLayout.closeDrawers()
                                 findNavController().navigate(R.id.authorFragment)
                             }
                             3 -> {
 
+                                vibratePhone()
                                 binding.drawerLayout.closeDrawers()
                                 /*share*/
                                 try {
@@ -164,6 +174,7 @@ class HomeFragment : Fragment() {
                             }
                             4 -> {
                                 /*rate*/
+                                vibratePhone()
                                 binding.drawerLayout.closeDrawers()
                                 try {
                                     val uri: Uri =
@@ -180,15 +191,89 @@ class HomeFragment : Fragment() {
                                 }
                             }
                             5 -> {
+                                vibratePhone()
                                 activity?.finish()
                             }
                         }
+                    } else {
+                        if (isClick) {
+                            if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+                                mediaPlayer?.release()
+                                mediaPlayer = null
+                            }
+                            // any code here
+                            when (position) {
+                                0 -> {
+                                    vibratePhone()
+                                    binding.drawerLayout.closeDrawers()
+                                }
+                                1 -> {
+                                    vibratePhone()
+                                    binding.drawerLayout.closeDrawers()
+                                    findNavController().navigate(R.id.aboutAppFragment)
+                                }
+                                2 -> {
+                                    vibratePhone()
+                                    binding.drawerLayout.closeDrawers()
+                                    findNavController().navigate(R.id.authorFragment)
+                                }
+                                3 -> {
+
+                                    vibratePhone()
+                                    binding.drawerLayout.closeDrawers()
+                                    /*share*/
+                                    try {
+                                        val intent = Intent(Intent.ACTION_SEND)
+                                        intent.setType("text/plain")
+                                        intent.putExtra(
+                                            Intent.EXTRA_SUBJECT,
+                                            "History Uz"
+                                        )
+                                        val shareMessage =
+                                            "https://play.google.com/store/apps/details?id=${activity?.packageName}"
+                                        intent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+                                        startActivity(
+                                            Intent.createChooser(
+                                                intent,
+                                                "Yuborish uchun tanlang..."
+                                            )
+                                        )
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+                                }
+                                4 -> {
+                                    /*rate*/
+                                    vibratePhone()
+                                    binding.drawerLayout.closeDrawers()
+                                    try {
+                                        val uri: Uri =
+                                            Uri.parse("market://details?id=${activity?.packageName}")
+                                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        startActivity(intent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        val uri: Uri =
+                                            Uri.parse("http://play.google.com/store/apps/details?id=${activity?.packageName}")
+                                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        startActivity(intent)
+                                    }
+                                }
+                                5 -> {
+                                    vibratePhone()
+                                    activity?.finish()
+                                }
+                            }
+                        }
+                        isClick = true
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.postDelayed({
+                            isClick = false
+                        }, 700)
                     }
-                    isClick = true
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.postDelayed({
-                        isClick = false
-                    }, 700)
+
+
                 }
 
             })
@@ -201,6 +286,7 @@ class HomeFragment : Fragment() {
                 mediaPlayer?.release()
                 mediaPlayer = null
             }
+            vibratePhone()
             Cache.themePosition = position
             startActivity(Intent(requireContext(), ThemeActivity::class.java))
         }
@@ -243,4 +329,12 @@ class HomeFragment : Fragment() {
         binding.drawerLayout.closeDrawers()
     }
 
+    fun Fragment.vibratePhone() {
+        val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (Build.VERSION.SDK_INT >= 26) {
+            vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            vibrator.vibrate(200)
+        }
+    }
 }

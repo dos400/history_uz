@@ -12,6 +12,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import uz.hamroev.historyuz.R
 import uz.hamroev.historyuz.adapters.AuthorAdapter
+import uz.hamroev.historyuz.cache.Cache
 import uz.hamroev.historyuz.databinding.FragmentAuthorBinding
 import uz.hamroev.historyuz.models.Author
 
@@ -34,19 +35,29 @@ class AuthorFragment : Fragment() {
 
 
         binding.backButton.setOnClickListener {
-            if (isClick) {
+            if (Cache.isBlindActive!!) {
                 if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
                     mediaPlayer?.release()
                     mediaPlayer = null
                 }
                 findNavController().popBackStack()
                 stopMediaPlayer()
+            } else {
+                if (isClick) {
+                    if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+                        mediaPlayer?.release()
+                        mediaPlayer = null
+                    }
+                    findNavController().popBackStack()
+                    stopMediaPlayer()
+                }
+                isClick = true
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({
+                    isClick = false
+                }, 700)
             }
-            isClick = true
-            val handler = Handler(Looper.getMainLooper())
-            handler.postDelayed({
-                isClick = false
-            }, 700)
+
         }
 
         binding.backButton.setOnLongClickListener {
@@ -87,10 +98,28 @@ class AuthorFragment : Fragment() {
     private fun loadAuthors() {
         listAuthor = ArrayList()
         listAuthor.clear()
-        listAuthor.add(Author("Mirzaxmedova \nHulkar", "TDShU, kafedra mudiri", R.drawable.ic_hulkar_opa))
+        listAuthor.add(
+            Author(
+                "Mirzaxmedova \nHulkar",
+                "TDShU, kafedra mudiri",
+                R.drawable.ic_hulkar_opa
+            )
+        )
         listAuthor.add(Author("Karimov \nNodir", "TDShU, oʼqituvchi", R.drawable.ic_nodir_karimov))
-        listAuthor.add(Author("Xomidov \nIsfandiyor", "Sevimli TV diktori", R.drawable.ic_isfandiyorxon))
-        listAuthor.add(Author("Meliqoʼziev \nIqboljon", "Oʼzbekiston davlat sanʼat va madaniyat instituti \n" + "Ovoz rejissyorligi va operatorlik mahorati kafedrasi mudiri", R.drawable.ic_users))
+        listAuthor.add(
+            Author(
+                "Xomidov \nIsfandiyor",
+                "Sevimli TV diktori",
+                R.drawable.ic_isfandiyorxon
+            )
+        )
+        listAuthor.add(
+            Author(
+                "Meliqoʼziev \nIqboljon",
+                "Oʼzbekiston davlat sanʼat va madaniyat instituti \n" + "Ovoz rejissyorligi va operatorlik mahorati kafedrasi mudiri",
+                R.drawable.ic_users
+            )
+        )
         listAuthor.add(Author("Hamroyev \nDoston", "Dasturchi.", R.drawable.ic_doston))
     }
 
@@ -108,6 +137,19 @@ class AuthorFragment : Fragment() {
             mediaPlayer2?.release()
             mediaPlayer2 = null
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopMediaPlayer()
+        stopMediaPlayer2()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopMediaPlayer()
+        stopMediaPlayer2()
+
     }
 
 

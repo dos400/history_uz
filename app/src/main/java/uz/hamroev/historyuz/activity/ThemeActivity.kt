@@ -5,10 +5,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.MediaPlayer
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatDelegate
@@ -53,11 +51,19 @@ class ThemeActivity : AppCompatActivity() {
 
         //back
         binding.backButton.setOnClickListener {
-            if (openWithTwoClick()) {
+            if (Cache.isBlindActive!!) {
+                vibrate()
                 finish()
+            } else {
+                if (openWithTwoClick()) {
+                    vibrate()
+                    finish()
+                }
             }
+
         }
         binding.backButton.setOnLongClickListener {
+            vibrate()
             try {
                 stopMediaPlayer()
                 mediaPlayer = MediaPlayer.create(this, R.raw.orqaga)
@@ -77,15 +83,27 @@ class ThemeActivity : AppCompatActivity() {
 
         //zoom out #### need kattalashtirish audio ###
         binding.zoomOutButton.setOnClickListener {
-            if (openWithTwoClick()) {
+            if (Cache.isBlindActive!!) {
+                vibrate()
                 lifecycleScope.launch(Dispatchers.Main) {
                     mavzuAdapter.textSize -= 1.0f
                     Cache.textSize = mavzuAdapter.textSize
                     mavzuAdapter.notifyDataSetChanged()
                 }
+            } else {
+                if (openWithTwoClick()) {
+                    vibrate()
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        mavzuAdapter.textSize -= 1.0f
+                        Cache.textSize = mavzuAdapter.textSize
+                        mavzuAdapter.notifyDataSetChanged()
+                    }
+                }
             }
+
         }
         binding.zoomOutButton.setOnLongClickListener {
+            vibrate()
             try {
                 stopMediaPlayer()
                 mediaPlayer = MediaPlayer.create(this, R.raw.orqaga)
@@ -105,15 +123,29 @@ class ThemeActivity : AppCompatActivity() {
 
         //zoom in  #### need kichiklashtirdh audio ####
         binding.zoomInButton.setOnClickListener {
-            if (openWithTwoClick()) {
+
+            if (Cache.isBlindActive!!) {
+                vibrate()
                 lifecycleScope.launch(Dispatchers.Main) {
                     mavzuAdapter.textSize += 1.0f
                     Cache.textSize = mavzuAdapter.textSize
                     mavzuAdapter.notifyDataSetChanged()
                 }
+            } else {
+
+                if (openWithTwoClick()) {
+                    vibrate()
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        mavzuAdapter.textSize += 1.0f
+                        Cache.textSize = mavzuAdapter.textSize
+                        mavzuAdapter.notifyDataSetChanged()
+                    }
+                }
             }
+
         }
         binding.zoomInButton.setOnLongClickListener {
+            vibrate()
             try {
                 stopMediaPlayer()
                 mediaPlayer = MediaPlayer.create(this, R.raw.orqaga)
@@ -132,7 +164,9 @@ class ThemeActivity : AppCompatActivity() {
         }
 
 
+        //font
         binding.fontButton.setOnLongClickListener {
+            vibrate()
             try {
                 stopMediaPlayer()
                 mediaPlayer = MediaPlayer.create(this, R.raw.orqaga)
@@ -156,11 +190,9 @@ class ThemeActivity : AppCompatActivity() {
                 listFont.add(Font("Roboto Regular", R.font.main_roboto_regular))
                 listFont.add(Font("Roboto Mono", R.font.roboto_mono))
                 listFont.add(Font("Playball", R.font.playball))
-                listFont.add(Font("Leixo", R.font.leixo))
                 listFont.add(Font("Caveat", R.font.caveat))
                 listFont.add(Font("Comfortaa", R.font.comforta))
                 listFont.add(Font("Roboto Slab", R.font.roboto_slab))
-                listFont.add(Font("Sofia", R.font.sofia))
 
                 val alertDialog = android.app.AlertDialog.Builder(binding.root.context)
                 val dialog = alertDialog.create()
@@ -171,6 +203,7 @@ class ThemeActivity : AppCompatActivity() {
                 dialog.setCancelable(true)
 
                 bindingFont.backButtonDialog.setOnLongClickListener {
+                    vibrate()
                     try {
                         stopMediaPlayer()
                         mediaPlayer = MediaPlayer.create(this, R.raw.orqaga)
@@ -190,9 +223,11 @@ class ThemeActivity : AppCompatActivity() {
 
                 bindingFont.backButtonDialog.setOnClickListener {
                     if (Cache.isBlindActive!!) {
+                        vibrate()
                         dialog.dismiss()
                     } else {
                         if (openWithTwoClick()) {
+                            vibrate()
                             dialog.dismiss()
                         }
                     }
@@ -201,6 +236,7 @@ class ThemeActivity : AppCompatActivity() {
                 val fontAdapter =
                     FontAdapter(this, listFont, object : FontAdapter.OnFontClickListener {
                         override fun onClick(font: Font, position: Int) {
+                            vibrate()
                             Cache.textFont = font.fontResource
                             Log.d(TAG, "onBind: Fontga ${font.fontText} - ${font.fontResource}")
                             mavzuAdapter.font = Cache.textFont!!
@@ -217,7 +253,9 @@ class ThemeActivity : AppCompatActivity() {
             }
         }
 
+        //play
         binding.playButton.setOnLongClickListener {
+            vibrate()
             try {
                 stopMediaPlayer()
                 mediaPlayer = MediaPlayer.create(this, R.raw.orqaga)
@@ -235,7 +273,8 @@ class ThemeActivity : AppCompatActivity() {
             return@setOnLongClickListener true
         }
         binding.playButton.setOnClickListener {
-            if (openWithTwoClick()) {
+            if (Cache.isBlindActive!!){
+                vibrate()
                 if (isPlay) {
                     isPlay = false
                     binding.musicImage.setImageResource(R.drawable.fi_play)
@@ -245,8 +284,23 @@ class ThemeActivity : AppCompatActivity() {
                     playSound()
                     binding.musicImage.setImageResource(R.drawable.fi_pause)
                 }
+            } else {
+                if (openWithTwoClick()) {
+                    vibrate()
+                    if (isPlay) {
+                        isPlay = false
+                        binding.musicImage.setImageResource(R.drawable.fi_play)
+                        pauseSound()
+                    } else {
+                        isPlay = true
+                        playSound()
+                        binding.musicImage.setImageResource(R.drawable.fi_pause)
+                    }
+                }
             }
         }
+
+
 
 
     }
@@ -256,7 +310,35 @@ class ThemeActivity : AppCompatActivity() {
             listTheme = TarixDatabase.GET.getTarixDatabase().getTarixDao()
                 .getThemeById(Cache.themePosition!!)
 
-            mavzuAdapter = MavzuAdapter(context, listTheme)
+            mavzuAdapter = MavzuAdapter(context, listTheme, object : MavzuAdapter.OnTextClickListener{
+                override fun onClick() {
+                    if (Cache.isBlindActive!!){
+                        vibrate()
+                        if (isPlay) {
+                            isPlay = false
+                            binding.musicImage.setImageResource(R.drawable.fi_play)
+                            pauseSound()
+                        } else {
+                            isPlay = true
+                            playSound()
+                            binding.musicImage.setImageResource(R.drawable.fi_pause)
+                        }
+                    } else {
+                        if (openWithTwoClick()) {
+                            vibrate()
+                            if (isPlay) {
+                                isPlay = false
+                                binding.musicImage.setImageResource(R.drawable.fi_play)
+                                pauseSound()
+                            } else {
+                                isPlay = true
+                                playSound()
+                                binding.musicImage.setImageResource(R.drawable.fi_pause)
+                            }
+                        }
+                    }
+                }
+            })
             mavzuAdapter.textSize = Cache.textSize!!
             mavzuAdapter.font = Cache.textFont!!
             binding.rvMavzu.adapter = mavzuAdapter
@@ -416,6 +498,24 @@ class ThemeActivity : AppCompatActivity() {
         pauseSound()
         binding.musicImage.setImageResource(R.drawable.fi_play)
         stopMediaPlayer()
+    }
+
+    fun vibrate() {
+        val vib = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager =
+                getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(VIBRATOR_SERVICE) as Vibrator
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vib.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            @Suppress("DEPRECATION")
+            vib.vibrate(300)
+        }
     }
 
 

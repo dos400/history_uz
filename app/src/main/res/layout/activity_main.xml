@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/main_roboto_regular"
             android:padding="10dp"
-            android:text="Oliy taʼlim muassasalarida tahsil olayotgan \nkoʼzi ojiz va koʼrishda nuqsoni boʼlgan talabalar uchun \ntarix fanidan mobil oʼquv ilovasini yaratish"
+            android:text="Oliy taʼlim muassasalarida tahsil olayotgan \nkoʼzi ojiz va koʼrishda nuqsoni boʼlgan talabalar uchun \ntarix fanidan mobil oʼquv ilova"
             android:textColor="@color/black"
             android:textSize="12sp"
             android:layout_gravity="center"
