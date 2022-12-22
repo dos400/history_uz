@@ -4,8 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import uz.hamroev.historyuz.R
 import uz.hamroev.historyuz.databinding.ItemThemeBinding
 import uz.hamroev.historyuz.models.Theme
+import uz.hamroev.historyuz.utils.anim
 
 class ThemeAdapter(var context: Context, var list: ArrayList<Theme>, var onThemeClickListener: OnThemeClickListener) :
     RecyclerView.Adapter<ThemeAdapter.VhTheme>() {
@@ -14,8 +16,14 @@ class ThemeAdapter(var context: Context, var list: ArrayList<Theme>, var onTheme
         RecyclerView.ViewHolder(itemThemeBinding.root) {
 
         fun onBind(theme: Theme, position: Int) {
-            itemThemeBinding.themeNameTextView.text = theme.name
 
+            if (position%2 == 0){
+                itemThemeBinding.main.animation = context.anim(R.anim.anim_right)
+            } else {
+                itemThemeBinding.main.animation = context.anim(R.anim.anim_left)
+            }
+
+            itemThemeBinding.themeNameTextView.text = theme.name
             itemThemeBinding.main.setOnClickListener {
                 onThemeClickListener.onClick(theme, position)
             }

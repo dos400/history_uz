@@ -4,8 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import uz.hamroev.historyuz.R
 import uz.hamroev.historyuz.databinding.ItemNavBinding
 import uz.hamroev.historyuz.models.Nav
+import uz.hamroev.historyuz.utils.anim
 
 class NavAdapter(
     var context: Context,
@@ -19,6 +21,7 @@ class NavAdapter(
         fun onBind(nav: Nav, position: Int) {
             itemNavBinding.navNameTextView.text = nav.navName
             itemNavBinding.navIconImageView.setImageResource(nav.navIcon)
+
 
             itemNavBinding.main.setOnLongClickListener {
                 onNavClickListener.onLongClick(nav, position)

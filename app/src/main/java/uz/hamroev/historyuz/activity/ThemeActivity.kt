@@ -106,7 +106,7 @@ class ThemeActivity : AppCompatActivity() {
             vibrate()
             try {
                 stopMediaPlayer()
-                mediaPlayer = MediaPlayer.create(this, R.raw.orqaga)
+                mediaPlayer = MediaPlayer.create(this, R.raw.dos_kichik)
                 mediaPlayer?.start()
 
                 mediaPlayer?.setOnCompletionListener {
@@ -148,7 +148,7 @@ class ThemeActivity : AppCompatActivity() {
             vibrate()
             try {
                 stopMediaPlayer()
-                mediaPlayer = MediaPlayer.create(this, R.raw.orqaga)
+                mediaPlayer = MediaPlayer.create(this, R.raw.dos_katta)
                 mediaPlayer?.start()
 
                 mediaPlayer?.setOnCompletionListener {
@@ -169,7 +169,7 @@ class ThemeActivity : AppCompatActivity() {
             vibrate()
             try {
                 stopMediaPlayer()
-                mediaPlayer = MediaPlayer.create(this, R.raw.orqaga)
+                mediaPlayer = MediaPlayer.create(this, R.raw.dos_shrift)
                 mediaPlayer?.start()
 
                 mediaPlayer?.setOnCompletionListener {
@@ -256,19 +256,32 @@ class ThemeActivity : AppCompatActivity() {
         //play
         binding.playButton.setOnLongClickListener {
             vibrate()
-            try {
-                stopMediaPlayer()
-                mediaPlayer = MediaPlayer.create(this, R.raw.orqaga)
-                mediaPlayer?.start()
+            if (isPlay){
+                try {
+                    stopMediaPlayer()
+                    mediaPlayer = MediaPlayer.create(this, R.raw.dos_tuxtatish)
+                    mediaPlayer?.start()
 
-                mediaPlayer?.setOnCompletionListener {
-                    if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
-                        mediaPlayer?.release()
-                        mediaPlayer = null
+                    mediaPlayer?.setOnCompletionListener {
+                        if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+                            mediaPlayer?.release()
+                            mediaPlayer = null
+                        }
                     }
-                }
-            } catch (e: Exception) {
-                Log.d(TAG, "onCreate: ${e.message}")
+                } catch (e: Exception) { }
+            } else {
+                try {
+                    stopMediaPlayer()
+                    mediaPlayer = MediaPlayer.create(this, R.raw.dos_boshlash)
+                    mediaPlayer?.start()
+
+                    mediaPlayer?.setOnCompletionListener {
+                        if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+                            mediaPlayer?.release()
+                            mediaPlayer = null
+                        }
+                    }
+                } catch (e: Exception) { }
             }
             return@setOnLongClickListener true
         }
@@ -314,15 +327,6 @@ class ThemeActivity : AppCompatActivity() {
                 override fun onClick() {
                     if (Cache.isBlindActive!!){
                         vibrate()
-                        if (isPlay) {
-                            isPlay = false
-                            binding.musicImage.setImageResource(R.drawable.fi_play)
-                            pauseSound()
-                        } else {
-                            isPlay = true
-                            playSound()
-                            binding.musicImage.setImageResource(R.drawable.fi_pause)
-                        }
                     } else {
                         if (openWithTwoClick()) {
                             vibrate()
