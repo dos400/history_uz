@@ -106,7 +106,7 @@ class ThemeActivity : AppCompatActivity() {
             vibrate()
             try {
                 stopMediaPlayer()
-                mediaPlayer = MediaPlayer.create(this, R.raw.dos_kichik)
+                mediaPlayer = MediaPlayer.create(this, R.raw.d_kichik)
                 mediaPlayer?.start()
 
                 mediaPlayer?.setOnCompletionListener {
@@ -148,7 +148,7 @@ class ThemeActivity : AppCompatActivity() {
             vibrate()
             try {
                 stopMediaPlayer()
-                mediaPlayer = MediaPlayer.create(this, R.raw.dos_katta)
+                mediaPlayer = MediaPlayer.create(this, R.raw.d_katta)
                 mediaPlayer?.start()
 
                 mediaPlayer?.setOnCompletionListener {
@@ -169,7 +169,7 @@ class ThemeActivity : AppCompatActivity() {
             vibrate()
             try {
                 stopMediaPlayer()
-                mediaPlayer = MediaPlayer.create(this, R.raw.dos_shrift)
+                mediaPlayer = MediaPlayer.create(this, R.raw.d_shrift)
                 mediaPlayer?.start()
 
                 mediaPlayer?.setOnCompletionListener {
@@ -259,7 +259,7 @@ class ThemeActivity : AppCompatActivity() {
             if (isPlay){
                 try {
                     stopMediaPlayer()
-                    mediaPlayer = MediaPlayer.create(this, R.raw.dos_tuxtatish)
+                    mediaPlayer = MediaPlayer.create(this, R.raw.d_tuxtatish)
                     mediaPlayer?.start()
 
                     mediaPlayer?.setOnCompletionListener {
@@ -272,7 +272,7 @@ class ThemeActivity : AppCompatActivity() {
             } else {
                 try {
                     stopMediaPlayer()
-                    mediaPlayer = MediaPlayer.create(this, R.raw.dos_boshlash)
+                    mediaPlayer = MediaPlayer.create(this, R.raw.d_boshlash)
                     mediaPlayer?.start()
 
                     mediaPlayer?.setOnCompletionListener {

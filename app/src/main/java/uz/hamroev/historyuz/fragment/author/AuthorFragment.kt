@@ -116,8 +116,8 @@ class AuthorFragment : Fragment() {
         listAuthor.add(
             Author(
                 "Meliqoʼziev \nIqboljon",
-                "Oʼzbekiston davlat sanʼat va madaniyat instituti \n" + "Ovoz rejissyorligi va operatorlik mahorati kafedrasi mudiri",
-                R.drawable.ic_users
+                "Sanʼatshunoslik fanlari boʼyicha falsafa doktori (PhD), professor, Oʼzbekiston davlat sanʼat va madaniyat instituti “Ovoz rejissyorligi va operatorlik mahorati” kafedrasi mudiri.",
+                R.drawable.ic_iqbol
             )
         )
         listAuthor.add(Author("Hamroyev \nDoston", "Dasturchi.", R.drawable.ic_doston))
